@@ -28,6 +28,7 @@ interface ImageData {
   vspace: string;
   border: string;
   borderStyle: string;
+  alignment: string;
 }
 
 type CssNormalizer = (css: string) => string;
@@ -169,7 +170,8 @@ const defaultData = (): ImageData => {
     hspace: '',
     vspace: '',
     border: '',
-    borderStyle: ''
+    borderStyle: '',
+    alignment: 'left',
   };
 };
 
@@ -195,6 +197,27 @@ const getStyleValue = (normalizeCss: CssNormalizer, data: ImageData): string => 
   }
 
   return normalizeCss(image.getAttribute('style'));
+};
+
+const getAlignment = (image: HTMLElement): string => {
+  if(hasCaption(image)) {
+    const figureClass = getAttrib(image.parentNode as HTMLElement, 'class');
+    const match = figureClass.match(/\balign-(center|left|right)\b/);
+    if(match) {
+      return match[1];
+    }
+  } else {
+    const styleValue = getStyle(image, 'float') || '';
+    if(styleValue === 'left' || styleValue === 'right') {
+      return styleValue;
+    } else {
+      if(getStyle(image, 'margin-left') === 'auto' &&
+         getStyle(image, 'margin-right') === 'auto') {
+        return 'center';
+      }
+    }
+    return '';
+  }
 };
 
 const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
@@ -230,7 +253,8 @@ const read = (normalizeCss: CssNormalizer, image: HTMLElement): ImageData => {
     hspace: getHspace(image),
     vspace: getVspace(image),
     border: getBorder(image),
-    borderStyle: getStyle(image, 'borderStyle')
+    borderStyle: getStyle(image, 'borderStyle'),
+    alignment: getAlignment(image)
   };
 };
 
@@ -239,6 +263,66 @@ const updateProp = (image: HTMLElement, oldData: ImageData, newData: ImageData, 
     set(image, name, newData[name]);
   }
 };
+
+const updateImageAlignment = (image: HTMLElement, newValue: string) => {
+  // Remove any float: left or right
+  if(newValue == 'left' || newValue == 'right') {
+    image.style.cssFloat = newValue;
+  } else {
+    const float = image.style.cssFloat || '';
+    if(float == 'left' || float == 'right') {
+      image.style.cssFloat = null;
+    }
+  }
+  if(newValue == 'center') {
+    image.style.marginLeft = "auto";
+    image.style.marginRight = "auto";
+    image.style.display = "block";
+  } else {
+    if(image.style.marginLeft && image.style.marginLeft == 'auto') {
+      image.style.marginLeft = null;
+    }
+    if(image.style.marginRight && image.style.marginRight == 'auto') {
+      image.style.marginRight = null;
+    }
+    if(image.style.display && image.style.display == 'block') {
+      image.style.display = null;
+    }
+  } 
+}
+
+const updateCaptionAlignment = (figure: HTMLElement, newValue: string) => {
+  // Get list of existing classes
+  var classes = figure.className ? figure.className.split(/\s+/) : [];
+  // Filter out any align-* classes
+  classes = classes.filter(elem => !elem.match(/^align-/));
+  // Add new class, if needed
+  if(newValue != '' && newValue != 'none') {
+    classes.push("align-" + newValue);
+  }
+  figure.className = classes.join(" ");
+}
+
+const updateAlignment = (image: HTMLElement, oldData: ImageData, newData: ImageData) => {
+  if(newData.caption) {
+    if(!oldData.caption) {
+      // If a caption was added remove alignment from the image itself
+      updateImageAlignment(image, '');
+      // And set alignment on the new caption
+      updateCaptionAlignment(image.parentNode as HTMLElement, newData.alignment);
+    } else {
+      // Only change alignment of caption if it was changed
+      if(newData.alignment != oldData.alignment) {
+        updateCaptionAlignment(image.parentNode as HTMLElement, newData.alignment);
+      }
+    }
+  } else {
+    // Update if we previously had a caption or if alignment has changed
+    if(oldData.caption || newData.alignment != oldData.alignment) {
+      updateImageAlignment(image, newData.alignment);
+    }
+  }
+}
 
 const normalized = (set: (image: HTMLElement, value: string) => void, normalizeCss: CssNormalizer) => {
   return (image: HTMLElement, name: string, value: string) => {
@@ -257,6 +341,7 @@ const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLEleme
   updateProp(image, oldData, newData, 'width', setSize('width', normalizeCss));
   updateProp(image, oldData, newData, 'height', setSize('height', normalizeCss));
   updateProp(image, oldData, newData, 'class', setAttrib);
+  updateAlignment(image, oldData, newData);
   updateProp(image, oldData, newData, 'style', normalized((image, value) => setAttrib(image, 'style', value), normalizeCss));
   updateProp(image, oldData, newData, 'hspace', normalized(setHspace, normalizeCss));
   updateProp(image, oldData, newData, 'vspace', normalized(setVspace, normalizeCss));
