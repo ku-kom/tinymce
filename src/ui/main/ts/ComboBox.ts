@@ -25,6 +25,8 @@ import { document } from '@ephox/dom-globals';
  * @extends tinymce.ui.Widget
  */
 
+declare let window: any;
+
 export default Widget.extend({
   /**
    * Constructs a new control instance with the specified settings.
@@ -204,7 +206,8 @@ export default Widget.extend({
    * @method repaint
    */
   repaint () {
-    const self = this, elm = self.getEl(), openElm = self.getEl('open'), rect = self.layoutRect();
+    const self = this, elm = self.getEl(), openElm = self.getEl('open'),
+          openElm2 = self.getEl('open-img'), rect = self.layoutRect();
     let width, lineHeight, innerPadding = 0;
     const inputElm = elm.firstChild;
 
@@ -215,10 +218,14 @@ export default Widget.extend({
       );
     }
 
-    if (openElm) {
-      width = rect.w - DomUtils.getSize(openElm).width - 10;
+    if (openElm2) {
+        width = rect.w - DomUtils.getSize(openElm2).width - DomUtils.getSize(openElm).width - 10;
     } else {
-      width = rect.w - 10;
+      if (openElm) {
+        width = rect.w - DomUtils.getSize(openElm).width - 10;
+      } else {
+        width = rect.w - 10;
+      }
     }
 
     // Detect old IE 7+8 add lineHeight to align caret vertically in the middle
@@ -249,6 +256,30 @@ export default Widget.extend({
     DomQuery(this.getEl('inp')).on('change', function (e) {
       self.state.set('value', e.target.value);
       self.fire('change', e);
+    });
+
+    DomQuery(this.getEl('open-img')).on('click', function (e) {
+      // Prevent default behaviour
+      e.preventDefault && e.preventDefault();
+      e.stopPropagation && e.stopPropagation();
+
+      let editor = window.tinymce.activeEditor,
+          imageBrowserCallback = editor.settings.image_picker_callback ||
+                                 editor.settings.file_picker_callback,
+          meta = self.fire('beforecall').meta;
+      
+      meta = Tools.extend({ filetype: self.settings.filetype }, meta);
+  
+      imageBrowserCallback.call(
+        editor,
+        function (value, meta) {
+          self.value(value).fire('change', { meta });
+        },
+        self.value(),
+        meta
+      );
+
+      return false;
     });
 
     return self._super();
@@ -303,8 +334,19 @@ export default Widget.extend({
         '</button>' +
         '</div>'
       );
-
       self.classes.add('has-open');
+
+      // Add imagebase button if looking for an image
+      if((settings.filetype || '') == 'image') {
+        openBtnHtml = (
+          '<div id="' + id + '-open-img" class="' + prefix + 'btn ' + prefix + 'open-img" tabIndex="-1" role="button">' +
+          '<button id="' + id + '-action-img" type="button" hidefocus="1" tabindex="-1">' +
+          '<i class="mce-ico mce-i-image"></i>' +
+          '</button>' +
+          '</div>'
+        ) + openBtnHtml;
+        self.classes.add('has-open-img');
+      }
     }
 
     return (
