@@ -294,11 +294,12 @@ const updateImageAlignment = (image: HTMLElement, newValue: string) => {
 const updateCaptionAlignment = (figure: HTMLElement, newValue: string) => {
   // Get list of existing classes
   var classes = figure.className ? figure.className.split(/\s+/) : [];
-  // Filter out any align-* classes
-  classes = classes.filter(elem => !elem.match(/^align-/));
+  // Filter out any align-* and img-* classes
+  classes = classes.filter(elem => !elem.match(/^(align|img)-/));
   // Add new class, if needed
   if(newValue != '' && newValue != 'none') {
     classes.push("align-" + newValue);
+    classes.push("img-" + newValue);
   }
   figure.className = classes.join(" ");
 }
