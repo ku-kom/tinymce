@@ -1,0 +1,11 @@
+@import "../../../lightgray/main/less/desktop/Skin.less";
+
+/* Horrible hack to hide certain table property form items */
+.mce-window[aria-label="Table properties"] .mce-form[role="tabpanel"]:nth-child(2) .mce-formitem:nth-child(6),
+.mce-window[aria-label="Table properties"] .mce-form[role="tabpanel"]:nth-child(2) .mce-formitem:nth-child(7),
+.mce-window[aria-label="Table properties"] .mce-form[role="tabpanel"]:nth-child(3) .mce-form:nth-child(3),
+.mce-window[aria-label="Row properties"] .mce-form[role="tabpanel"]:nth-child(3) .mce-form:nth-child(3),
+.mce-window[aria-label="Cell properties"] .mce-form[role="tabpanel"]:nth-child(3) .mce-form:nth-child(3) {
+    display: none;
+}
+
