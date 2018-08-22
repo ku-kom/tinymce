@@ -8,6 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Control from './Control';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Factory from 'tinymce/core/api/ui/Factory';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -326,9 +327,10 @@ export default Widget.extend({
     text = self.state.get('text');
 
     if (icon || text) {
+      let translatedTitle = Control.translate("Choose image from CMS");
       openBtnHtml = (
         '<div id="' + id + '-open" class="' + prefix + 'btn ' + prefix + 'open" tabIndex="-1" role="button">' +
-        '<button id="' + id + '-action" type="button" hidefocus="1" tabindex="-1">' +
+        '<button id="' + id + '-action" type="button" hidefocus="1" tabindex="-1" title="' + translatedTitle + '">' +
         (icon !== 'caret' ? '<i class="' + icon + '"></i>' : '<i class="' + prefix + 'caret"></i>') +
         (text ? (icon ? ' ' : '') + text : '') +
         '</button>' +
@@ -338,13 +340,14 @@ export default Widget.extend({
 
       // Add imagebase button if looking for an image
       if((settings.filetype || '') == 'image') {
-        openBtnHtml = (
+        translatedTitle = Control.translate("Choose image from image archive");
+        openBtnHtml = openBtnHtml + (
           '<div id="' + id + '-open-img" class="' + prefix + 'btn ' + prefix + 'open-img" tabIndex="-1" role="button">' +
-          '<button id="' + id + '-action-img" type="button" hidefocus="1" tabindex="-1">' +
+          '<button id="' + id + '-action-img" type="button" hidefocus="1" tabindex="-1" title="' + translatedTitle + '">' +
           '<i class="mce-ico mce-i-image"></i>' +
           '</button>' +
           '</div>'
-        ) + openBtnHtml;
+        );
         self.classes.add('has-open-img');
       }
     }
