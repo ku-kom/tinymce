@@ -200,18 +200,18 @@ const getStyleValue = (normalizeCss: CssNormalizer, data: ImageData): string => 
 };
 
 const getAlignment = (image: HTMLElement): string => {
-  if(hasCaption(image)) {
+  if (hasCaption(image)) {
     const figureClass = getAttrib(image.parentNode as HTMLElement, 'class');
     const match = figureClass.match(/\balign-(center|left|right)\b/);
-    if(match) {
+    if (match) {
       return match[1];
     }
   } else {
     const styleValue = getStyle(image, 'float') || '';
-    if(styleValue === 'left' || styleValue === 'right') {
+    if (styleValue === 'left' || styleValue === 'right') {
       return styleValue;
     } else {
-      if(getStyle(image, 'margin-left') === 'auto' &&
+      if (getStyle(image, 'margin-left') === 'auto' &&
          getStyle(image, 'margin-right') === 'auto') {
         return 'center';
       }
@@ -266,64 +266,64 @@ const updateProp = (image: HTMLElement, oldData: ImageData, newData: ImageData, 
 
 const updateImageAlignment = (image: HTMLElement, newValue: string) => {
   // Remove any float: left or right
-  if(newValue == 'left' || newValue == 'right') {
+  if (newValue === 'left' || newValue === 'right') {
     image.style.cssFloat = newValue;
   } else {
     const float = image.style.cssFloat || '';
-    if(float == 'left' || float == 'right') {
+    if (float === 'left' || float === 'right') {
       image.style.cssFloat = null;
     }
   }
-  if(newValue == 'center') {
-    image.style.marginLeft = "auto";
-    image.style.marginRight = "auto";
-    image.style.display = "block";
+  if (newValue === 'center') {
+    image.style.marginLeft = 'auto';
+    image.style.marginRight = 'auto';
+    image.style.display = 'block';
   } else {
-    if(image.style.marginLeft && image.style.marginLeft == 'auto') {
+    if (image.style.marginLeft && image.style.marginLeft === 'auto') {
       image.style.marginLeft = null;
     }
-    if(image.style.marginRight && image.style.marginRight == 'auto') {
+    if (image.style.marginRight && image.style.marginRight === 'auto') {
       image.style.marginRight = null;
     }
-    if(image.style.display && image.style.display == 'block') {
+    if (image.style.display && image.style.display === 'block') {
       image.style.display = null;
     }
-  } 
-}
+  }
+};
 
 const updateCaptionAlignment = (figure: HTMLElement, newValue: string) => {
   // Get list of existing classes
-  var classes = figure.className ? figure.className.split(/\s+/) : [];
+  let classes = figure.className ? figure.className.split(/\s+/) : [];
   // Filter out any align-* and img-* classes
-  classes = classes.filter(elem => !elem.match(/^(align|img)-/));
+  classes = classes.filter((elem) => !elem.match(/^(align|img)-/));
   // Add new class, if needed
-  if(newValue != '' && newValue != 'none') {
-    classes.push("align-" + newValue);
-    classes.push("img-" + newValue);
+  if (newValue !== '' && newValue !== 'none') {
+    classes.push('align-' + newValue);
+    classes.push('img-' + newValue);
   }
-  figure.className = classes.join(" ");
-}
+  figure.className = classes.join(' ');
+};
 
 const updateAlignment = (image: HTMLElement, oldData: ImageData, newData: ImageData) => {
-  if(newData.caption) {
-    if(!oldData.caption) {
+  if (newData.caption) {
+    if (!oldData.caption) {
       // If a caption was added remove alignment from the image itself
       updateImageAlignment(image, '');
       // And set alignment on the new caption
       updateCaptionAlignment(image.parentNode as HTMLElement, newData.alignment);
     } else {
       // Only change alignment of caption if it was changed
-      if(newData.alignment != oldData.alignment) {
+      if (newData.alignment !== oldData.alignment) {
         updateCaptionAlignment(image.parentNode as HTMLElement, newData.alignment);
       }
     }
   } else {
     // Update if we previously had a caption or if alignment has changed
-    if(oldData.caption || newData.alignment != oldData.alignment) {
+    if (oldData.caption || newData.alignment !== oldData.alignment) {
       updateImageAlignment(image, newData.alignment);
     }
   }
-}
+};
 
 const normalized = (set: (image: HTMLElement, value: string) => void, normalizeCss: CssNormalizer) => {
   return (image: HTMLElement, name: string, value: string) => {

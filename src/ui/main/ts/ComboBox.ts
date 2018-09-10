@@ -264,13 +264,13 @@ export default Widget.extend({
       e.preventDefault && e.preventDefault();
       e.stopPropagation && e.stopPropagation();
 
-      let editor = window.tinymce.activeEditor,
+      const editor = window.tinymce.activeEditor,
           imageBrowserCallback = editor.settings.image_picker_callback ||
-                                 editor.settings.file_picker_callback,
-          meta = self.fire('beforecall').meta;
-      
+                                 editor.settings.file_picker_callback;
+      let meta = self.fire('beforecall').meta;
+
       meta = Tools.extend({ filetype: self.settings.filetype }, meta);
-  
+
       imageBrowserCallback.call(
         editor,
         function (value, meta) {
@@ -327,7 +327,7 @@ export default Widget.extend({
     text = self.state.get('text');
 
     if (icon || text) {
-      let translatedTitle = Control.translate("Choose image from CMS");
+      let translatedTitle = Control.translate('Choose image from CMS');
       openBtnHtml = (
         '<div id="' + id + '-open" class="' + prefix + 'btn ' + prefix + 'open" tabIndex="-1" role="button">' +
         '<button id="' + id + '-action" type="button" hidefocus="1" tabindex="-1" title="' + translatedTitle + '">' +
@@ -339,8 +339,8 @@ export default Widget.extend({
       self.classes.add('has-open');
 
       // Add imagebase button if looking for an image
-      if((settings.filetype || '') == 'image') {
-        translatedTitle = Control.translate("Choose image from image archive");
+      if ((settings.filetype || '') === 'image') {
+        translatedTitle = Control.translate('Choose image from image archive');
         openBtnHtml = openBtnHtml + (
           '<div id="' + id + '-open-img" class="' + prefix + 'btn ' + prefix + 'open-img" tabIndex="-1" role="button">' +
           '<button id="' + id + '-action-img" type="button" hidefocus="1" tabindex="-1" title="' + translatedTitle + '">' +
