@@ -274,6 +274,18 @@ const updateImageAlignment = (image: HTMLElement, newValue: string) => {
       image.style.cssFloat = null;
     }
   }
+
+  // Get list of existing classes
+  let classes = image.className ? image.className.split(/\s+/) : [];
+  // Filter out any img-* classes
+  classes = classes.filter((elem) => !elem.match(/^img-/));
+  // Add new class, if needed
+  if (newValue !== '' && newValue !== 'none') {
+    classes.push('img-' + newValue);
+  }
+  // Store new list of classes back on the image
+  image.className = classes.join(' ');
+
   if (newValue === 'center') {
     image.style.marginLeft = 'auto';
     image.style.marginRight = 'auto';
@@ -289,6 +301,7 @@ const updateImageAlignment = (image: HTMLElement, newValue: string) => {
       image.style.display = null;
     }
   }
+
 };
 
 const updateCaptionAlignment = (figure: HTMLElement, newValue: string) => {
