@@ -25,7 +25,8 @@
       "no-console": true,
       "no-bitwise": false,
       "no-duplicate-imports": true,
-      "no-namespace": false
+      "no-namespace": false,
+      "no-unused-expression": [true, "allow-fast-null-checks"]
     },
     "rulesDirectory": []
 }
