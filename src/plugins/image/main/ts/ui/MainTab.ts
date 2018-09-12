@@ -74,6 +74,18 @@ const getGeneralItems = function (editor, imageListCtrl) {
     );
   }
 
+  generalFormItems.push({
+    name: 'alignment',
+    type: 'listbox',
+    label: 'Alignment',
+    values: [
+       { value: '', text: 'None' },
+       { value: 'left', text: 'Left' },
+       { value: 'center', text: 'Center' },
+       { value: 'right', text: 'Right' }
+    ]
+  });
+
   if (Settings.getClassList(editor)) {
     generalFormItems.push({
       name: 'class',

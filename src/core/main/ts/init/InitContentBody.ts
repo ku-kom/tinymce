@@ -14,7 +14,7 @@ import ForceBlocks from '../ForceBlocks';
 import NodeChange from '../NodeChange';
 import SelectionOverrides from '../SelectionOverrides';
 import UndoManager from '../api/UndoManager';
-import Experimental from '../api/Experimental';
+import Annotator from '../api/Annotator';
 import Formatter from '../api/Formatter';
 import Serializer from '../api/dom/Serializer';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -27,7 +27,7 @@ import Delay from '../api/util/Delay';
 import Quirks from '../util/Quirks';
 import Tools from '../api/util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
-import TripleClickSelection from 'tinymce/core/selection/TripleClickSelection';
+import * as MultiClickSelection from 'tinymce/core/selection/MultiClickSelection';
 import * as DetailsElement from '../selection/DetailsElement';
 import { document, window } from '@ephox/dom-globals';
 
@@ -228,14 +228,14 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   editor.parser = createParser(editor);
   editor.serializer = Serializer(settings, editor);
   editor.selection = Selection(editor.dom, editor.getWin(), editor.serializer, editor);
-  editor.experimental = Experimental(editor);
+  editor.annotator = Annotator(editor);
   editor.formatter = Formatter(editor);
   editor.undoManager = UndoManager(editor);
   editor._nodeChangeDispatcher = new NodeChange(editor);
   editor._selectionOverrides = SelectionOverrides(editor);
 
   DetailsElement.setup(editor);
-  TripleClickSelection.setup(editor);
+  MultiClickSelection.setup(editor);
   KeyboardOverrides.setup(editor);
   ForceBlocks.setup(editor);
 

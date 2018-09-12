@@ -241,6 +241,64 @@ module.exports = function (grunt) {
         files: {
           'js/tinymce/skins/lightgray/content.inline.min.css': 'src/skins/lightgray/main/less/desktop/Content.Inline.less'
         }
+      },
+
+      'obvius-desktop': {
+        options: {
+          cleancss: true,
+          strictImports: true,
+          compress: true,
+          yuicompress: true,
+          sourceMap: true,
+          sourceMapRootpath: '.',
+          optimization: 2
+        },
+        files: {
+          'js/tinymce/skins/obvius/skin.min.css': 'src/skins/obvius/main/less/Skin.less'
+        }
+      },
+      'obvius-mobile': {
+        options: {
+          plugins : [ new (require('less-plugin-autoprefix'))({ browsers : [ 'last 2 versions', /* for phantom */'safari >= 4' ] }) ],
+          compress: true,
+          yuicompress: true,
+          sourceMap: true,
+          sourceMapRootpath: '.',
+          optimization: 2
+        },
+        files: {
+          'js/tinymce/skins/obvius/skin.mobile.min.css': 'src/skins/obvius/main/less/Mobile.less'
+        }
+      },
+      'obvius-content-mobile': {
+        options: {
+          cleancss: true,
+          strictImports: true,
+          compress: true
+        },
+        files: {
+          'js/tinymce/skins/obvius/content.mobile.min.css': 'src/skins/obvius/main/less/Content.less'
+        }
+      },
+      'obvius-content': {
+        options: {
+          cleancss: true,
+          strictImports: true,
+          compress: true
+        },
+        files: {
+          'js/tinymce/skins/obvius/content.min.css': 'src/skins/obvius/main/less/Content.less'
+        }
+      },
+      'obvius-content-inline': {
+        options: {
+          cleancss: true,
+          strictImports: true,
+          compress: true
+        },
+        files: {
+          'js/tinymce/skins/obvius/content.inline.min.css': 'src/skins/obvius/main/less/Content.less'
+        }
       }
     },
 
@@ -292,6 +350,24 @@ module.exports = function (grunt) {
             cwd: 'src/skins/lightgray/main/img',
             src: '**',
             dest: 'js/tinymce/skins/lightgray/img'
+          },
+          {
+            expand: true,
+            flatten: true,
+            cwd: 'src/skins/lightgray/main/fonts',
+            src: [
+              '**',
+              '!*.json',
+              '!*.md'
+            ],
+            dest: 'js/tinymce/skins/obvius/fonts'
+          },
+          {
+            expand: true,
+            flatten: true,
+            cwd: 'src/skins/lightgray/main/img',
+            src: '**',
+            dest: 'js/tinymce/skins/obvius/img'
           }
         ]
       },
