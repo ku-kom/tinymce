@@ -171,7 +171,7 @@ const defaultData = (): ImageData => {
     vspace: '',
     border: '',
     borderStyle: '',
-    alignment: 'left',
+    alignment: '',
   };
 };
 
