@@ -28,7 +28,7 @@ const get = function (dom) {
       {
         selector: 'figure.image',
         collapsed: false,
-        classes: 'align-left',
+        classes: 'align-left img-left',
         ceFalseOverride: true,
         preview: 'font-family font-size'
       },
@@ -42,13 +42,22 @@ const get = function (dom) {
         defaultBlock: 'div'
       },
       {
-        selector: 'img,table',
+        selector: 'img',
+        collapsed: false,
+        classes: 'img-left',
+        styles: {
+          float: 'left'
+        },
+        preview: 'font-family font-size'
+      },
+      {
+        selector: 'table',
         collapsed: false,
         styles: {
           float: 'left'
         },
         preview: 'font-family font-size'
-      }
+      },
     ],
 
     aligncenter: [
@@ -64,13 +73,14 @@ const get = function (dom) {
       {
         selector: 'figure.image',
         collapsed: false,
-        classes: 'align-center',
+        classes: 'align-center img-center',
         ceFalseOverride: true,
         preview: 'font-family font-size'
       },
       {
         selector: 'img',
         collapsed: false,
+        classes: 'img-center',
         styles: {
           display: 'block',
           marginLeft: 'auto',
@@ -93,7 +103,7 @@ const get = function (dom) {
       {
         selector: 'figure.image',
         collapsed: false,
-        classes: 'align-right',
+        classes: 'align-right img-right',
         ceFalseOverride: true,
         preview: 'font-family font-size'
       },
@@ -107,7 +117,16 @@ const get = function (dom) {
         defaultBlock: 'div'
       },
       {
-        selector: 'img,table',
+        selector: 'img',
+        collapsed: false,
+        classes: 'img-right',
+        styles: {
+          float: 'right'
+        },
+        preview: 'font-family font-size'
+      },
+      {
+        selector: 'table',
         collapsed: false,
         styles: {
           float: 'right'
@@ -126,6 +145,22 @@ const get = function (dom) {
         defaultBlock: 'div',
         preview: 'font-family font-size'
       }
+    ],
+
+    alignnone: [
+      {
+        selector: 'figure.image',
+        collapsed: false,
+        classes: 'img-default',
+        ceFalseOverride: true,
+        preview: 'font-family font-size'
+      },
+      {
+        selector: 'img',
+        classes: 'img-default',
+        collapsed: false,
+        preview: 'font-family font-size'
+      },
     ],
 
     bold: [

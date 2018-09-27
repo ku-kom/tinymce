@@ -347,7 +347,7 @@ export default function (editor: Editor) {
       }
 
       // Remove all other alignments first
-      each('left,center,right,justify'.split(','), function (name) {
+      each('left,center,right,justify,none'.split(','), function (name) {
         if (align !== name) {
           formatter.remove('align' + name);
         }
@@ -356,6 +356,12 @@ export default function (editor: Editor) {
       if (align !== 'none') {
         toggleFormat('align' + align);
       }
+
+      // If format was removed, add the 'alignnone' format
+      if (!formatter.match('align' + align)) {
+        formatter.apply('alignnone');
+      }
+
     },
 
     // Override list commands to fix WebKit bug
