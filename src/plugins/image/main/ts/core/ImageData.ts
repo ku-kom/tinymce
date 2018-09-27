@@ -171,7 +171,7 @@ const defaultData = (): ImageData => {
     vspace: '',
     border: '',
     borderStyle: '',
-    alignment: 'left',
+    alignment: '',
   };
 };
 
@@ -234,6 +234,10 @@ const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
     figure.appendChild(DOM.create('figcaption', { contentEditable: true }, 'Caption'));
     figure.contentEditable = 'false';
 
+    // Re-trigger updating of alignment, this time with the correct caption
+    // setting.
+    updateAlignment(image, Merger.merge(read(normalizeCss, image), { caption: false }), data);
+
     return figure;
   } else {
     return image;
@@ -274,6 +278,22 @@ const updateImageAlignment = (image: HTMLElement, newValue: string) => {
       image.style.cssFloat = null;
     }
   }
+
+  // Get list of existing classes
+  let classes = image.className ? image.className.split(/\s+/) : [];
+  // Filter out any img-* classes
+  classes = classes.filter((elem) => !elem.match(/^img-/));
+  // Add new class, if needed
+  if (newValue !== null) {
+    if (newValue === '' || newValue === 'none') {
+      classes.push('img-default');
+    } else {
+      classes.push('img-' + newValue);
+    }
+  }
+  // Store new list of classes back on the image
+  image.className = classes.join(' ');
+
   if (newValue === 'center') {
     image.style.marginLeft = 'auto';
     image.style.marginRight = 'auto';
@@ -289,6 +309,7 @@ const updateImageAlignment = (image: HTMLElement, newValue: string) => {
       image.style.display = null;
     }
   }
+
 };
 
 const updateCaptionAlignment = (figure: HTMLElement, newValue: string) => {
@@ -297,7 +318,9 @@ const updateCaptionAlignment = (figure: HTMLElement, newValue: string) => {
   // Filter out any align-* and img-* classes
   classes = classes.filter((elem) => !elem.match(/^(align|img)-/));
   // Add new class, if needed
-  if (newValue !== '' && newValue !== 'none') {
+  if (newValue === '' || newValue === 'none') {
+    classes.push('img-default');
+  } else {
     classes.push('align-' + newValue);
     classes.push('img-' + newValue);
   }
@@ -308,7 +331,7 @@ const updateAlignment = (image: HTMLElement, oldData: ImageData, newData: ImageD
   if (newData.caption) {
     if (!oldData.caption) {
       // If a caption was added remove alignment from the image itself
-      updateImageAlignment(image, '');
+      updateImageAlignment(image, null);
       // And set alignment on the new caption
       updateCaptionAlignment(image.parentNode as HTMLElement, newData.alignment);
     } else {

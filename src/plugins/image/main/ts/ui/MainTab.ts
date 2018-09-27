@@ -79,7 +79,7 @@ const getGeneralItems = function (editor, imageListCtrl) {
     type: 'listbox',
     label: 'Alignment',
     values: [
-       { value: '', text: 'None' },
+       { value: '', text: 'Inline/none' },
        { value: 'left', text: 'Left' },
        { value: 'center', text: 'Center' },
        { value: 'right', text: 'Right' }
