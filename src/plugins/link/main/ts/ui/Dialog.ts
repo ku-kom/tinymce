@@ -164,7 +164,8 @@ const showDialog = function (editor, linkList) {
   anchorElm = Utils.getAnchorElement(editor);
 
   data.text = initialText = Utils.getAnchorText(editor.selection, anchorElm);
-  data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
+  const customHref = dom.getAttrib(anchorElm, 'data-obvius-href') || dom.getAttrib(anchorElm, 'href');
+  data.href = anchorElm ? customHref : '';
 
   if (anchorElm) {
     data.target = dom.getAttrib(anchorElm, 'target');
