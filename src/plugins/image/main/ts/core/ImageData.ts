@@ -246,7 +246,7 @@ const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
 
 const read = (normalizeCss: CssNormalizer, image: HTMLElement): ImageData => {
   return {
-    src: getAttrib(image, 'src'),
+    src: getAttrib(image, 'data-obvius-src') || getAttrib(image, 'src'),
     alt: getAttrib(image, 'alt'),
     title: getAttrib(image, 'title'),
     width: getSize(image, 'width'),
