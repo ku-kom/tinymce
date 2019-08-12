@@ -191,11 +191,6 @@ const showDialog = function (editor) {
 
   const body = [
     {
-        title: 'General',
-        type: 'form',
-        items: generalFormItems
-    },
-    {
         title: 'Embed',
         type: 'container',
         layout: 'flex',
@@ -211,6 +206,11 @@ const showDialog = function (editor) {
           },
           embedTextBox
         ]
+      },
+      {
+        title: 'General',
+        type: 'form',
+        items: generalFormItems
       }
   ];
 
