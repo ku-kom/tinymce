@@ -3,6 +3,19 @@ import Settings from '../api/Settings';
 import Utils from '../core/Utils';
 import SizeManager from './SizeManager';
 
+const onDecorativeChange = function (evt, editor) {
+  const control = evt.control;
+  const rootControl = control.rootControl;
+  const altControl = rootControl.find('#alt');
+  const disable = control.checked();
+
+  if (disable) {
+    altControl.value('');
+  }
+
+  altControl.disabled(disable);
+};
+
 const onSrcChange = function (evt, editor) {
   let srcURL, prependURL, absoluteURLPattern;
   const meta = evt.meta || {};
@@ -62,6 +75,18 @@ const getGeneralItems = function (editor, imageListCtrl) {
 
   if (Settings.hasDescription(editor)) {
     generalFormItems.push({ name: 'alt', type: 'textbox', label: 'Image description' });
+  }
+
+  if (Settings.hasImageDecorative(editor)) {
+    generalFormItems.push(
+      {
+        name: 'decorative',
+        type: 'checkbox',
+        label: 'Decorative image',
+        onchange (evt) {
+          onDecorativeChange(evt, editor);
+        }
+      });
   }
 
   if (Settings.hasImageTitle(editor)) {
