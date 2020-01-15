@@ -36,6 +36,10 @@ const hasImageCaption = function (editor) {
   return editor.settings.image_caption === true ? true : false;
 };
 
+const hasImageDecorative = function (editor) {
+  return editor.settings.image_decorative === true ? true : false;
+};
+
 const getImageList = function (editor) {
   return editor.getParam('image_list', false);
 };
@@ -72,6 +76,7 @@ export default {
   hasDescription,
   hasImageTitle,
   hasImageCaption,
+  hasImageDecorative,
   getImageList,
   hasUploadUrl,
   hasUploadHandler,
