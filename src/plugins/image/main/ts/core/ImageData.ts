@@ -18,6 +18,7 @@ const DOM = DOMUtils.DOM;
 interface ImageData {
   src: string;
   alt: string;
+  decorative: boolean;
   title: string;
   width: string;
   height: string;
@@ -71,6 +72,10 @@ const getStyle = (image: HTMLElement, name: string): string => {
 
 const hasCaption = (image: HTMLElement): boolean => {
   return image.parentNode !== null && image.parentNode.nodeName === 'FIGURE';
+};
+
+const isDecorative = (image: HTMLElement): boolean => {
+  return image.getAttribute('decorative') === 'true';
 };
 
 const setAttrib = (image: HTMLElement, name: string, value: string) => {
@@ -161,6 +166,7 @@ const defaultData = (): ImageData => {
   return {
     src: '',
     alt: '',
+    decorative: false,
     title: '',
     width: '',
     height: '',
@@ -248,6 +254,7 @@ const read = (normalizeCss: CssNormalizer, image: HTMLElement): ImageData => {
   return {
     src: getAttrib(image, 'data-obvius-src') || getAttrib(image, 'src'),
     alt: getAttrib(image, 'alt'),
+    decorative: isDecorative(image),
     title: getAttrib(image, 'title'),
     width: getSize(image, 'width'),
     height: getSize(image, 'height'),
@@ -361,6 +368,7 @@ const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLEleme
   updateProp(image, oldData, newData, 'caption', (image, _name, _value) => toggleCaption(image));
   updateProp(image, oldData, newData, 'src', setAttrib);
   updateProp(image, oldData, newData, 'alt', setAttrib);
+  updateProp(image, oldData, newData, 'decorative', setAttrib);
   updateProp(image, oldData, newData, 'title', setAttrib);
   updateProp(image, oldData, newData, 'width', setSize('width', normalizeCss));
   updateProp(image, oldData, newData, 'height', setSize('height', normalizeCss));
