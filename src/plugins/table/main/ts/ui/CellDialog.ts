@@ -11,7 +11,6 @@
 import { Fun } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import Styles from '../actions/Styles';
-import * as Util from '../alien/Util';
 import Helpers from './Helpers';
 import { hasAdvancedCellTab, getCellClassList } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
@@ -23,8 +22,6 @@ import { HTMLElement, Node, HTMLTableCellElement } from '@ephox/dom-globals';
  */
 
 interface FormData {
-  width: string;
-  height: string;
   scope: string;
   class: string;
   align: string;
@@ -41,8 +38,6 @@ const updateStyles = function (elm: HTMLElement, cssText: string) {
 const extractDataFromElement = function (editor: Editor, elm: HTMLElement) {
   const dom = editor.dom;
   const data: FormData = {
-    width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
-    height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     scope: dom.getAttrib(elm, 'scope'),
     class: dom.getAttrib(elm, 'class'),
     type: elm.nodeName.toLowerCase(),
@@ -80,12 +75,6 @@ const onSubmitCellForm = function (editor: Editor, cells: Node[], evt) {
     }
   }
 
-  function setStyle(elm: Node, name: string, value: string) {
-    if (cells.length === 1 || value) {
-      dom.setStyle(elm, name, value);
-    }
-  }
-
   if (hasAdvancedCellTab(editor)) {
     Helpers.syncAdvancedStyleFields(editor, evt);
   }
@@ -102,8 +91,6 @@ const onSubmitCellForm = function (editor: Editor, cells: Node[], evt) {
       }
 
       setAttrib(cellElm, 'class', data.class);
-      setStyle(cellElm, 'width', Util.addSizeSuffix(data.width));
-      setStyle(cellElm, 'height', Util.addSizeSuffix(data.height));
 
       // Switch cell type
       if (data.type && cellElm.nodeName.toLowerCase() !== data.type) {
@@ -150,8 +137,6 @@ const open = function (editor: Editor) {
 
   if (cells.length > 1) {
     data = {
-      width: '',
-      height: '',
       scope: '',
       class: '',
       align: '',
@@ -199,8 +184,6 @@ const open = function (editor: Editor) {
           maxWidth: 50
         },
         items: [
-          { label: 'Width', name: 'width', onchange: Fun.curry(Helpers.updateStyleField, editor) },
-          { label: 'Height', name: 'height', onchange: Fun.curry(Helpers.updateStyleField, editor) },
           {
             label: 'Cell type',
             name: 'type',
