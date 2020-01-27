@@ -9,7 +9,7 @@
  */
 
 import { Editor } from 'tinymce/core/api/Editor';
-import { defaultData, read, ImageData, create, isFigure, write } from 'tinymce/plugins/image/core/ImageData';
+import { defaultData, read, ImageData, create, isFigure, write, validateAlt } from 'tinymce/plugins/image/core/ImageData';
 import Utils from 'tinymce/plugins/image/core/Utils';
 import { HTMLElement } from '@ephox/dom-globals';
 
@@ -112,6 +112,10 @@ const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
 
 const insertOrUpdateImage = (editor: Editor, data: ImageData) => {
   const image = getSelectedImage(editor);
+  if (!validateAlt(data)) {
+    editor.windowManager.alert('You must either fill in the Alternate Text box or specify that the image is decorative.');
+    return false;
+  }
   if (image) {
     if (data.src) {
       writeImageDataToSelection(editor, data);
@@ -121,6 +125,7 @@ const insertOrUpdateImage = (editor: Editor, data: ImageData) => {
   } else if (data.src) {
     insertImageAtCaret(editor, data);
   }
+  return true;
 };
 
 export {
