@@ -362,6 +362,14 @@ const normalized = (set: (image: HTMLElement, value: string) => void, normalizeC
   };
 };
 
+const validateAlt = (newData: ImageData): boolean => {
+  if (newData.alt === '' && !newData.decorative) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
 const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLElement) => {
   const oldData = read(normalizeCss, image);
 
@@ -389,5 +397,6 @@ export {
   isImage,
   create,
   read,
-  write
+  write,
+  validateAlt
 };
