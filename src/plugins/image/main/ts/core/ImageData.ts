@@ -362,12 +362,21 @@ const normalized = (set: (image: HTMLElement, value: string) => void, normalizeC
   };
 };
 
+const validateAlt = (newData: ImageData): boolean => {
+  if (newData.alt === '' && !newData.decorative) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
 const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLElement) => {
   const oldData = read(normalizeCss, image);
 
   updateProp(image, oldData, newData, 'caption', (image, _name, _value) => toggleCaption(image));
   updateProp(image, oldData, newData, 'src', setAttrib);
-  updateProp(image, oldData, newData, 'alt', setAttrib);
+  // Always set alt even if data.alt is an empty string
+  setAttrib(image, 'alt', newData.alt);
   updateProp(image, oldData, newData, 'decorative', setAttrib);
   updateProp(image, oldData, newData, 'title', setAttrib);
   updateProp(image, oldData, newData, 'width', setSize('width', normalizeCss));
@@ -389,5 +398,6 @@ export {
   isImage,
   create,
   read,
-  write
+  write,
+  validateAlt
 };

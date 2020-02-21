@@ -25,7 +25,12 @@ const submitForm = (editor: Editor, evt) => {
 
   editor.undoManager.transact(() => {
     const data = Merger.merge(readImageDataFromSelection(editor), win.toJSON());
-    insertOrUpdateImage(editor, data);
+    // Do validation, stop propagation if data not valid
+    const success = insertOrUpdateImage(editor, data);
+    if (!success) {
+      evt.preventDefault();
+      return;
+    }
   });
 
   editor.editorUpload.uploadImagesAuto();
