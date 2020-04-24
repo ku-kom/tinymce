@@ -7,13 +7,16 @@ const onDecorativeChange = function (evt, editor) {
   const control = evt.control;
   const rootControl = control.rootControl;
   const altControl = rootControl.find('#alt');
+  const titleControl = rootControl.find('#title');
   const disable = control.checked();
 
   if (disable) {
     altControl.value('');
+    titleControl.value('');
   }
 
   altControl.disabled(disable);
+  titleControl.disabled(disable);
 };
 
 const onSrcChange = function (evt, editor) {
